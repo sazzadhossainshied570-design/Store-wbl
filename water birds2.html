@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WATER BIRDS LIMITED - ERP PRO</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf-autotable.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root { 
+            --primary: #1e3a8a; --success: #10b981; --danger: #ef4444; 
+            --warning: #f59e0b; --accent: #3b82f6; --bg: #f8fafc;
+            --rejection: #8b5cf6; --sidebar-width: 260px;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        .sidebar { width: var(--sidebar-width); background: var(--primary); color: white; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-menu { flex: 1; padding: 15px 0; }
+        .nav-item { padding: 12px 25px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; color: #cbd5e1; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; border-left: 4px solid var(--accent); }
+        
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .top-bar { background: white; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .content-area { padding: 25px; overflow-y: auto; flex: 1; }
+        
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 10px; background: #f8fafc; font-size: 13px; color: #64748b; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        
+        .btn { border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-pdf { background: #fee2e2; color: #b91c1c; font-size: 12px; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+
+        input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #e2e8f0; border-radius: 6px; }
+        .tab-page { display: none; }
+        .tab-page.active { display: block; }
+
+        .badge-in { color: var(--success); font-weight: bold; }
+        .badge-out { color: var(--danger); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h2 style="margin:0; font-size: 18px;">WATER BIRDS ERP</h2>
+    </div>
+    <div class="sidebar-menu">
+        <div class="nav-item active" onclick="showTab('dashboard')"><i class="fas fa-home"></i> ড্যাশবোর্ড</div>
+        <div class="nav-item" onclick="showTab('entry')"><i class="fas fa-edit"></i> স্টক এন্ট্রি</div>
+        <div class="nav-item" onclick="showTab('inventory')"><i class="fas fa-boxes"></i> ইনভেন্টরি</div>
+        <div class="nav-item" onclick="showTab('logs')"><i class="fas fa-history"></i> ট্রানজেকশন লগ</div>
+    </div>
+    <div style="padding: 20px;">
+        <div id="profile-active" style="display: none;">
+            <button class="btn btn-danger" style="width: 100%;" onclick="logoutProfile()">লগআউট</button>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+    <div class="top-bar">
+        <div><i class="fas fa-user-circle"></i> <span id="display-name">অতিথি</span></div>
+        <div style="font-weight: bold; color: var(--primary);">CLOUD DATABASE <i class="fas fa-cloud"></i></div>
+    </div>
+
+    <div class="content-area">
+        <div id="dashboard" class="tab-page active">
+            <div class="card" style="background: linear-gradient(to right, #1e3a8a, #3b82f6); color: white;">
+                <h2>স্বাগতম, <span id="welcome-name">ভিজিটর</span></h2>
+                <p>ওয়াটার বার্ডস লিমিটেড অনলাইন ইনভেন্টরি সিস্টেম।</p>
+            </div>
+            <div id="login-section" class="card" style="max-width: 400px; margin: 0 auto;">
+                <h3 style="text-align:center">লগইন করুন</h3>
+                <select id="userSelect"><option value="">ইউজার নির্বাচন</option><option value="Sazzad Hossain">Sazzad Hossain</option><option value="Rokibul Islam">Rokibul Islam</option></select>
+                <input type="password" id="userPin" placeholder="পিন কোড">
+                <button class="btn btn-primary" style="width:100%" onclick="loginProfile()">লগইন</button>
+            </div>
+            <div id="admin-controls" style="display:none" class="card">
+                <h4 style="color:var(--danger)">অ্যাডমিন রিসেট প্যানেল</h4>
+                <button class="btn btn-danger" onclick="resetAllData()">রিসেট সব ডাটা</button>
+            </div>
+        </div>
+
+        <div id="entry" class="tab-page">
+            <div id="entry-form" style="display:none" class="card">
+                <h3>স্টক এন্ট্রি</h3>
+                <select id="pName">
+                    <option value="12×52 pressure vessel">12×52 pressure vessel</option>
+                    <option value="16×65 pressure vessel">16×65 pressure vessel</option>
+                    <option value="10×35 pressure vessel">10×35 pressure vessel</option>
+                </select>
+                <input type="number" id="pQty" placeholder="পরিমাণ">
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-success" style="flex:1" onclick="processStock('IN')">Stock IN</button>
+                    <button class="btn btn-danger" style="flex:1" onclick="processStock('OUT')">Stock OUT</button>
+                    <button class="btn" style="background:var(--rejection); color:white; flex:1" onclick="processStock('REJ')">Rejection</button>
+                </div>
+            </div>
+            <div id="entry-locked" class="card" style="text-align:center">লগইন করা নেই।</div>
+        </div>
+
+        <div id="inventory" class="tab-page">
+            <div class="card">
+                <div class="card-header"><h3>বর্তমান স্টক ব্যালেন্স</h3></div>
+                <table id="stockTable"><thead><tr><th>পণ্য</th><th>ব্যালেন্স</th></tr></thead><tbody></tbody></table>
+            </div>
+            <div class="card">
+                <div class="card-header"><h3>মোট ইন সামারি</h3></div>
+                <table id="invInTable"><thead><tr><th>পণ্য</th><th>মোট ইন (+)</th></tr></thead><tbody></tbody></table>
+            </div>
+            <div class="card">
+                <div class="card-header"><h3>মোট আউট সামারি</h3></div>
+                <table id="invOutTable"><thead><tr><th>পণ্য</th><th>মোট আউট (-)</th></tr></thead><tbody></tbody></table>
+            </div>
+        </div>
+
+        <div id="logs" class="tab-page">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="badge-in">Stock IN লগ</h3>
+                    <button class="btn btn-pdf" onclick="generatePDF('logTableIN', 'Stock_IN_Report')"><i class="fas fa-download"></i> PDF</button>
+                </div>
+                <table id="logTableIN"><thead><tr><th>সময়</th><th>পণ্য</th><th>Qty</th><th>ইউজার</th></tr></thead><tbody></tbody></table>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="badge-out">Stock OUT লগ</h3>
+                    <button class="btn btn-pdf" onclick="generatePDF('logTableOUT', 'Stock_OUT_Report')"><i class="fas fa-download"></i> PDF</button>
+                </div>
+                <table id="logTableOUT"><thead><tr><th>সময়</th><th>পণ্য</th><th>Qty</th><th>ইউজার</th></tr></thead><tbody></tbody></table>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 style="color:var(--rejection)">Rejection লগ</h3>
+                    <button class="btn btn-pdf" onclick="generatePDF('logTableREJ', 'Rejection_Report')"><i class="fas fa-download"></i> PDF</button>
+                </div>
+                <table id="logTableREJ"><thead><tr><th>সময়</th><th>পণ্য</th><th>Qty</th><th>ইউজার</th></tr></thead><tbody></tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Firebase Setup
+    const firebaseConfig = {
+        apiKey: "AIzaSyCv_lbDM4K5C79TB-P4EOIWVUgi9qHfNaE",
+        authDomain: "waterbirdserp.firebaseapp.com",
+        databaseURL: "https://waterbirdserp-default-rtdb.firebaseio.com",
+        projectId: "waterbirdserp",
+        storageBucket: "waterbirdserp.firebasestorage.app",
+        messagingSenderId: "799606239136",
+        appId: "1:799606239136:web:a07cb470d45f240817fec5",
+        measurementId: "G-V8PQ77FXYM"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    let USERS_LIST = { "Sazzad Hossain": "866199", "Rokibul Islam": "1122" };
+    let loggedInUser = null;
+
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function loginProfile() {
+        const name = document.getElementById('userSelect').value;
+        const pin = document.getElementById('userPin').value;
+        if (name && USERS_LIST[name] === pin) {
+            loggedInUser = name;
+            updateUI(true);
+        } else alert("ভুল পিন!");
+    }
+
+    function logoutProfile() { loggedInUser = null; updateUI(false); }
+
+    function updateUI(isLoggedIn) {
+        document.getElementById('display-name').innerText = isLoggedIn ? loggedInUser : "অতিথি";
+        document.getElementById('welcome-name').innerText = isLoggedIn ? loggedInUser : "ভিজিটর";
+        document.getElementById('login-section').style.display = isLoggedIn ? 'none' : 'block';
+        document.getElementById('profile-active').style.display = isLoggedIn ? 'block' : 'none';
+        document.getElementById('entry-form').style.display = isLoggedIn ? 'block' : 'none';
+        document.getElementById('entry-locked').style.display = isLoggedIn ? 'none' : 'block';
+        document.getElementById('admin-controls').style.display = (isLoggedIn && loggedInUser === "Sazzad Hossain") ? 'block' : 'none';
+    }
+
+    // PDF Generation Function
+    function generatePDF(tableId, title) {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(18);
+            doc.text("Water Birds Limited", 14, 15);
+            doc.setFontSize(12);
+            doc.text(title.replace(/_/g, ' '), 14, 22);
+            doc.text("Date: " + new Date().toLocaleString(), 14, 28);
+
+            doc.autoTable({
+                html: '#' + tableId,
+                startY: 35,
+                theme: 'striped',
+                headStyles: { fillColor: [30, 58, 138] }
+            });
+
+            doc.save(title + ".pdf");
+        } catch (error) {
+            console.error("PDF Error: ", error);
+            alert("পিডিএফ তৈরি করতে সমস্যা হয়েছে। দয়া করে পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।");
+        }
+    }
+
+    function processStock(type) {
+        const name = document.getElementById('pName').value;
+        const qty = parseInt(document.getElementById('pQty').value);
+        if (!name || isNaN(qty) || qty <= 0) return alert("পরিমাণ দিন!");
+
+        const logData = { name, type, qty, user: loggedInUser, time: new Date().toLocaleString() };
+        const dbPath = name.replace(/\s+/g, '_').replace(/\./g, '-');
+        
+        database.ref('inventory/' + dbPath).transaction((current) => {
+            let currentVal = (typeof current === 'number') ? current : 0;
+            return (type === 'IN') ? currentVal + qty : currentVal - qty;
+        }, (error, committed) => {
+            if (committed) {
+                database.ref('logs').push(logData);
+                document.getElementById('pQty').value = '';
+                alert("সফলভাবে সেভ হয়েছে!");
+            }
+        });
+    }
+
+    function resetAllData() {
+        if (confirm("সব মুছে যাবে! নিশ্চিত?")) {
+            if (prompt("RESET লিখুন:") === "RESET") database.ref('/').remove();
+        }
+    }
+
+    // Data Listeners
+    database.ref('inventory').on('value', snap => {
+        const data = snap.val() || {};
+        const body = document.querySelector('#stockTable tbody');
+        body.innerHTML = '';
+        for (let p in data) body.innerHTML += `<tr><td>${p.replace(/_/g, ' ')}</td><td><b>${data[p]}</b></td></tr>`;
+    });
+
+    database.ref('logs').on('value', snap => {
+        const logs = snap.val() || {};
+        const bIN = document.querySelector('#logTableIN tbody');
+        const bOUT = document.querySelector('#logTableOUT tbody');
+        const bREJ = document.querySelector('#logTableREJ tbody');
+        const bSumIn = document.querySelector('#invInTable tbody');
+        const bSumOut = document.querySelector('#invOutTable tbody');
+        
+        bIN.innerHTML = ''; bOUT.innerHTML = ''; bREJ.innerHTML = '';
+        bSumIn.innerHTML = ''; bSumOut.innerHTML = '';
+
+        const sumIn = {}; const sumOut = {};
+
+        Object.values(logs).reverse().forEach(l => {
+            const row = `<tr><td>${l.time}</td><td>${l.name}</td><td>${l.qty}</td><td>${l.user}</td></tr>`;
+            if(l.type === 'IN') { 
+                bIN.innerHTML += row; 
+                sumIn[l.name] = (sumIn[l.name] || 0) + l.qty;
+            } else if(l.type === 'OUT') { 
+                bOUT.innerHTML += row; 
+                sumOut[l.name] = (sumOut[l.name] || 0) + l.qty;
+            } else if(l.type === 'REJ') { 
+                bREJ.innerHTML += row; 
+                sumOut[l.name] = (sumOut[l.name] || 0) + l.qty;
+            }
+        });
+
+        for(let p in sumIn) bSumIn.innerHTML += `<tr><td>${p}</td><td class="badge-in">+${sumIn[p]}</td></tr>`;
+        for(let p in sumOut) bSumOut.innerHTML += `<tr><td>${p}</td><td class="badge-out">-${sumOut[p]}</td></tr>`;
+    });
+</script>
+</body>
+</html>
