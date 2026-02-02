@@ -11,7 +11,6 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         :root { 
             --bg-color: #020617;
@@ -25,63 +24,67 @@
             --text-main: #f1f5f9;
             --text-dim: #94a3b8;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background: var(--bg-color); 
             background-image: radial-gradient(circle at 10% 20%, rgba(129, 140, 248, 0.1) 0%, transparent 40%);
             color: var(--text-main); height: 100vh; display: flex; overflow: hidden; 
         }
-
         .sidebar { width: 280px; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(25px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; }
         .sidebar-header { padding: 40px 25px; }
         .logo-box { padding: 25px; border-radius: 24px; background: linear-gradient(145deg, rgba(255,255,255,0.05), transparent); border: 1px solid var(--glass-border); text-align: center; }
         .logo-text { font-size: 18px; font-weight: 800; letter-spacing: 2px; color: #fff; line-height: 1.4; }
         
         .sidebar-menu { flex: 1; padding: 15px; }
-        .nav-item { padding: 16px 20px; border-radius: 16px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; color: var(--text-dim); font-weight: 600; margin-bottom: 8px; }
+        .nav-item { padding: 16px 20px; border-radius: 16px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; color: var(--text-dim); font-weight: 600; margin-bottom: 8px; position: relative; }
         .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
         .nav-item.active { background: var(--primary); color: white; box-shadow: 0 10px 25px var(--primary-glow); }
-
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .top-bar { height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--glass-border); }
         .content-area { padding: 40px; overflow-y: auto; flex: 1; }
-
         .card { background: var(--card-bg); border-radius: 28px; padding: 30px; border: 1px solid var(--glass-border); margin-bottom: 30px; backdrop-filter: blur(15px); animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 35px; }
         .stat-card { background: rgba(255,255,255,0.02); padding: 25px; border-radius: 28px; border: 1px solid var(--glass-border); }
         .stat-card h2 { font-size: 32px; font-weight: 800; color: var(--primary); }
-
+        
         .btn { border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; font-size: 13px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: #020617; }
         .btn-danger { background: var(--danger); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--glass-border); color: var(--text-dim); }
+        .btn-outline.active { background: var(--primary); color: #fff; border-color: var(--primary); }
         
         table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-        th { text-align: left; padding: 12px 20px; color: var(--text-dim); font-size: 12px; text-transform: uppercase; }
-        td { padding: 16px 20px; background: rgba(255,255,255,0.03); color: var(--text-main); font-size: 14px; }
+        th { text-align: left; padding: 12px 20px; color: var(--text-dim); font-size: 11px; text-transform: uppercase; }
+        td { padding: 16px 20px; background: rgba(255,255,255,0.03); color: var(--text-main); font-size: 13px; }
         td:first-child { border-radius: 14px 0 0 14px; }
         td:last-child { border-radius: 0 14px 14px 0; }
-
+        
         .low-stock { color: var(--warning) !important; font-weight: 700; background: rgba(251, 191, 36, 0.1) !important; }
         .out-of-stock { color: var(--danger) !important; font-weight: 800; background: rgba(251, 113, 133, 0.1) !important; }
-
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--glass-border); border-radius: 14px; background: rgba(0,0,0,0.3); color: white; outline: none; }
-        .search-box { width: 220px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); }
-
+        .search-box { width: 180px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); }
         .tab-page { display: none; }
         .tab-page.active { display: block; animation: slideUp 0.4s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .filter-group { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 18px; border: 1px solid var(--glass-border); }
+        .date-label { font-size: 12px; color: var(--text-dim); font-weight: 600; }
+        .date-input { width: 150px !important; margin: 0 !important; cursor: pointer; height: 40px; }
+        .challan-badge { background: rgba(129, 140, 248, 0.2); color: var(--primary); padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; }
+        .pending-badge { background: var(--danger); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; position: absolute; right: 10px; top: 18px; }
 
-        iframe#print-frame { display: none; }
+        /* Log action buttons - Back to Original Alignment */
+        .log-actions { display: flex; gap: 5px; }
+        .btn-mini { padding: 6px 10px; font-size: 12px; border-radius: 8px; border: none; cursor: pointer; }
+        .btn-edit-log { background: rgba(251, 191, 36, 0.2); color: var(--warning); }
+        .btn-delete-log { background: rgba(251, 113, 133, 0.2); color: var(--danger); }
     </style>
 </head>
-<body>
 
+<body>
 <div class="sidebar">
     <div class="sidebar-header">
         <div class="logo-box"><div class="logo-text">WATER BIRDS<br><span style="color:var(--primary)">LIMITED</span></div></div>
@@ -91,7 +94,8 @@
         <div class="nav-item" onclick="showTab('entry')"><i class="fas fa-edit"></i> Stock Entry</div>
         <div class="nav-item" onclick="showTab('inventory')"><i class="fas fa-boxes"></i> Inventory</div>
         <div class="nav-item" onclick="showTab('logs')"><i class="fas fa-history"></i> Stock Logs</div>
-        <div class="nav-item" id="nav-settings" style="display:none;" onclick="showTab('settings')"><i class="fas fa-cog"></i> Settings</div>
+        <div class="nav-item" id="nav-pending" style="display:none;" onclick="showTab('pending')"><i class="fas fa-clock"></i> Pending <span id="pending-count-badge" class="pending-badge">0</span></div>
+        <div class="nav-item" id="nav-settings" onclick="showTab('settings')"><i class="fas fa-cog"></i> Settings</div>
     </div>
     <div style="padding: 20px;"><button id="logout-btn" class="btn btn-danger" style="width:100%; display:none;" onclick="logoutProfile()">Logout</button></div>
 </div>
@@ -117,6 +121,7 @@
                     <option value="Rokibul Islam">Rokibul Islam</option>
                     <option value="Mobin Bin Mihad">Mobin Bin Mihad</option>
                     <option value="Md.alamin">Md.alamin</option>
+                    <option value="Mdshipon">Md.shipon</option>
                 </select>
                 <input type="password" id="userPin" placeholder="Enter PIN">
                 <button class="btn btn-primary" style="width: 100%;" onclick="loginProfile()">Login</button>
@@ -136,9 +141,10 @@
                         <option value="16×65 pressure vessel">16×65 pressure vessel</option>
                     </select>
                     <input type="number" id="pQty" placeholder="Quantity">
+                    <input type="text" id="pVoucher" placeholder="Challan No (Only for OUT)" style="border-color: var(--primary);">
                     <div style="display:flex; gap:10px;">
-                        <button class="btn btn-success" style="flex:1" onclick="processStock('pName', 'pQty', 'IN', 'VESSEL')">IN</button>
-                        <button class="btn btn-danger" style="flex:1" onclick="processStock('pName', 'pQty', 'OUT', 'VESSEL')">OUT</button>
+                        <button class="btn btn-success" style="flex:1" onclick="handleStockRequest('pName', 'pQty', 'IN', 'VESSEL', 'pVoucher')">IN</button>
+                        <button class="btn btn-danger" style="flex:1" onclick="handleStockRequest('pName', 'pQty', 'OUT', 'VESSEL', 'pVoucher')">OUT</button>
                     </div>
                 </div>
                 <div class="card">
@@ -164,13 +170,26 @@
                         <option value="Riser Pipe">Riser Pipe</option>
                     </select>
                     <input type="number" id="accQty" placeholder="Quantity">
+                    <input type="text" id="accVoucher" placeholder="Challan No (Only for OUT)" style="border-color: var(--primary);">
                     <div style="display:flex; gap:10px;">
-                        <button class="btn btn-success" style="flex:1" onclick="processStock('accName', 'accQty', 'IN', 'ACC')">IN</button>
-                        <button class="btn btn-danger" style="flex:1" onclick="processStock('accName', 'accQty', 'OUT', 'ACC')">OUT</button>
+                        <button class="btn btn-success" style="flex:1" onclick="handleStockRequest('accName', 'accQty', 'IN', 'ACC', 'accVoucher')">IN</button>
+                        <button class="btn btn-danger" style="flex:1" onclick="handleStockRequest('accName', 'accQty', 'OUT', 'ACC', 'accVoucher')">OUT</button>
                     </div>
                 </div>
             </div>
             <div id="entry-locked" class="card" style="text-align:center;">Login to unlock entry</div>
+        </div>
+
+        <div id="pending" class="tab-page">
+            <div class="card">
+                <h3>Pending Approvals</h3>
+                <div style="overflow-x: auto;">
+                    <table id="pendingTable">
+                        <thead><tr><th>Time</th><th>User</th><th>Item</th><th>Qty</th><th>Type</th><th>Challan</th><th>Action</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <div id="inventory" class="tab-page">
@@ -203,29 +222,55 @@
                 <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3>Vessel History</h3>
                     <div style="display:flex; gap:10px;">
-                        <input type="text" class="search-box" id="vLogSearch" placeholder="Search..." onkeyup="filterTable('vesselLogTable', 1, this.value)">
+                        <input type="text" class="search-box" id="vLogSearch" placeholder="Search..." onkeyup="applyLogFilters('vesselLogTable')">
                         <button class="btn btn-primary" onclick="downloadExcel('vesselLogTable')">Excel</button>
                         <button class="btn btn-danger" onclick="printTable('vesselLogTable', 'VESSEL LOGS')">PDF</button>
                     </div>
                 </div>
-                <table id="vesselLogTable"><thead><tr><th>Time</th><th>Item</th><th>Qty</th><th>Type</th><th>User</th></tr></thead><tbody></tbody></table>
+                <div class="filter-group">
+                    <span class="date-label">From:</span><input type="date" id="vLogDateFrom" class="date-input" onchange="applyLogFilters('vesselLogTable')">
+                    <span class="date-label">To:</span><input type="date" id="vLogDateTo" class="date-input" onchange="applyLogFilters('vesselLogTable')">
+                    <button class="btn btn-outline active" onclick="setLogType('vesselLogTable', 'ALL', this)">All</button>
+                    <button class="btn btn-outline" onclick="setLogType('vesselLogTable', 'IN', this)">IN</button>
+                    <button class="btn btn-outline" onclick="setLogType('vesselLogTable', 'OUT', this)">OUT</button>
+                </div>
+                <table id="vesselLogTable"><thead><tr><th>Time</th><th>Item</th><th>Qty</th><th>Type</th><th>Challan</th><th>User</th><th>Action</th></tr></thead><tbody></tbody></table>
             </div>
+
             <div class="card">
                 <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3>Accessories History</h3>
                     <div style="display:flex; gap:10px;">
-                        <input type="text" class="search-box" id="aLogSearch" placeholder="Search..." onkeyup="filterTable('accLogTable', 1, this.value)">
+                        <input type="text" class="search-box" id="aLogSearch" placeholder="Search..." onkeyup="applyLogFilters('accLogTable')">
                         <button class="btn btn-primary" onclick="downloadExcel('accLogTable')">Excel</button>
                         <button class="btn btn-danger" onclick="printTable('accLogTable', 'ACC LOGS')">PDF</button>
                     </div>
                 </div>
-                <table id="accLogTable"><thead><tr><th>Time</th><th>Item</th><th>Qty</th><th>Type</th><th>User</th></tr></thead><tbody></tbody></table>
+                <div class="filter-group">
+                    <span class="date-label">From:</span><input type="date" id="aLogDateFrom" class="date-input" onchange="applyLogFilters('accLogTable')">
+                    <span class="date-label">To:</span><input type="date" id="aLogDateTo" class="date-input" onchange="applyLogFilters('accLogTable')">
+                    <button class="btn btn-outline active" onclick="setLogType('accLogTable', 'ALL', this)">All</button>
+                    <button class="btn btn-outline" onclick="setLogType('accLogTable', 'IN', this)">IN</button>
+                    <button class="btn btn-outline" onclick="setLogType('accLogTable', 'OUT', this)">OUT</button>
+                </div>
+                <table id="accLogTable"><thead><tr><th>Time</th><th>Item</th><th>Qty</th><th>Type</th><th>Challan</th><th>User</th><th>Action</th></tr></thead><tbody></tbody></table>
+            </div>
+        </div>
+
+        <div id="settings" class="tab-page">
+            <div id="settings-locked" class="card" style="text-align:center;"><h3><i class="fas fa-lock"></i> Please Login</h3></div>
+            <div id="settings-container" style="display:none;" class="card">
+                <h3>Change Account PIN</h3>
+                <p>User: <span id="setting-user-name" style="color: var(--primary); font-weight: 700;"></span></p>
+                <input type="password" id="currPin" placeholder="Current PIN">
+                <input type="password" id="newPin" placeholder="New PIN">
+                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="changeUserPin()">Update PIN Online</button>
             </div>
         </div>
     </div>
 </div>
 
-<iframe id="print-frame"></iframe>
+<iframe id="print-frame" style="display:none;"></iframe>
 
 <script>
     const firebaseConfig = {
@@ -237,11 +282,18 @@
         messagingSenderId: "799606239136",
         appId: "1:799606239136:web:a07cb470d45f240817fec5"
     };
+
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-
-    let USERS_LIST = { "Sazzad Hossain": "866199", "Rokibul Islam": "1122", "Mobin Bin Mihad": "1122", "Md.alamin": "1122" };
+    
+    let USERS_LIST = { "Sazzad Hossain": "866199", "Rokibul Islam": "1122", "Mobin Bin Mihad": "1122", "Md.alamin": "1122","Md.shipon":"1122" };
     let loggedInUser = null;
+    let currentLogFilters = { vesselLogTable: 'ALL', accLogTable: 'ALL' };
+
+    database.ref('users').on('value', snap => {
+        const cloudUsers = snap.val();
+        if(cloudUsers) { Object.keys(cloudUsers).forEach(u => { USERS_LIST[u.replace(/_/g, ' ')] = cloudUsers[u]; }); }
+    });
 
     function showTab(id) {
         document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
@@ -261,28 +313,134 @@
             document.getElementById('entry-container').style.display = 'grid';
             document.getElementById('entry-locked').style.display = 'none';
             document.getElementById('logout-btn').style.display = 'block';
-            if(name === "Sazzad Hossain") document.getElementById('admin-controls').style.display = 'block';
+            document.getElementById('settings-locked').style.display = 'none';
+            document.getElementById('settings-container').style.display = 'block';
+            document.getElementById('setting-user-name').innerText = name;
+            if(name === "Sazzad Hossain") {
+                document.getElementById('admin-controls').style.display = 'block';
+                document.getElementById('nav-pending').style.display = 'flex';
+            }
             showTab('dashboard');
         } else alert("Wrong PIN!");
     }
 
     function logoutProfile() { location.reload(); }
 
-    function processStock(nameId, qtyId, type, category) {
+    function changeUserPin() {
+        const cPin = document.getElementById('currPin').value;
+        const nPin = document.getElementById('newPin').value;
+        if (USERS_LIST[loggedInUser] === cPin) {
+            if (nPin.length >= 4) {
+                database.ref('users/' + loggedInUser.replace(/\s+/g, '_')).set(nPin)
+                .then(() => { alert("✅ PIN updated online."); })
+                .catch(e => alert("Error!"));
+            } else alert("Min 4 digits");
+        } else alert("Incorrect current PIN");
+    }
+
+    function handleStockRequest(nameId, qtyId, type, category, voucherId) {
         const name = document.getElementById(nameId).value;
         const qty = parseInt(document.getElementById(qtyId).value);
+        let voucher = document.getElementById(voucherId).value;
         if(!name || isNaN(qty) || qty <= 0) return alert("Valid data please!");
-        const path = category === 'VESSEL' ? 'vessels/' : 'accessories/';
-        const dbRef = database.ref('inventory/' + path + name.replace(/\s+/g, '_').replace(/\./g, '-'));
-        dbRef.transaction(curr => (type === 'IN' ? (curr || 0) + qty : (curr || 0) - qty), (err, commit) => {
-            if(commit) {
-                database.ref('logs').push({ name, qty, type, category, user: loggedInUser, time: new Date().toLocaleString() });
+        if(type === 'OUT' && !voucher) {
+            if(!confirm("No Challan Number entered. Continue anyway?")) return;
+            voucher = "N/A";
+        }
+        if(type === 'IN') voucher = "Inward";
+        const requestData = {
+            name: name, qty: qty, type: type, category: category,
+            user: loggedInUser, time: new Date().toLocaleString(), challan: voucher
+        };
+        if(loggedInUser === "Sazzad Hossain") { executeFinalUpdate(requestData, null); } 
+        else {
+            database.ref('pending_requests').push(requestData).then(() => {
+                alert("✅ Sent to Sazzad Hossain for Approval!");
                 document.getElementById(qtyId).value = '';
-                alert("✅ Success!");
+                document.getElementById(voucherId).value = '';
+            });
+        }
+    }
+
+    function executeFinalUpdate(data, pendingKey) {
+        const path = data.category === 'VESSEL' ? 'vessels/' : 'accessories/';
+        const sanitizedName = data.name.replace(/\s+/g, '_').replace(/\./g, '-');
+        const dbRef = database.ref('inventory/' + path + sanitizedName);
+        dbRef.transaction(curr => {
+            return (data.type === 'IN' ? (curr || 0) + data.qty : (curr || 0) - data.qty);
+        }, (err, commit) => {
+            if(commit) {
+                database.ref('logs').push(data);
+                if(pendingKey) database.ref('pending_requests/' + pendingKey).remove();
+                alert("✅ Stock Updated!");
             }
         });
     }
 
+    // Function for Action Buttons: Edit
+    function editLogEntry(logKey, currentQty, category, itemName, type) {
+        if(loggedInUser !== "Sazzad Hossain") return;
+        const newQtyStr = prompt("Edit Quantity:", currentQty);
+        if(newQtyStr === null) return;
+        const newQty = parseInt(newQtyStr);
+        if(isNaN(newQty) || newQty < 0) return alert("Invalid Quantity!");
+        
+        const diff = newQty - currentQty;
+        if(diff === 0) return;
+        
+        const path = category === 'VESSEL' ? 'vessels/' : 'accessories/';
+        const sanitizedName = itemName.replace(/\s+/g, '_').replace(/\./g, '-');
+        
+        database.ref('inventory/' + path + sanitizedName).transaction(curr => {
+            return (type === 'IN' ? (curr || 0) + diff : (curr || 0) - diff);
+        }, (err, commit) => {
+            if(commit) {
+                database.ref('logs/' + logKey).update({ qty: newQty })
+                .then(() => alert("✅ Quantity Updated!"));
+            }
+        });
+    }
+
+    // Function for Action Buttons: Delete
+    function deleteLogEntry(logKey, qty, category, itemName, type) {
+        if(loggedInUser !== "Sazzad Hossain") return;
+        if(!confirm("Are you sure? This will delete the record and REVERSE the stock balance.")) return;
+        
+        const path = category === 'VESSEL' ? 'vessels/' : 'accessories/';
+        const sanitizedName = itemName.replace(/\s+/g, '_').replace(/\./g, '-');
+        
+        database.ref('inventory/' + path + sanitizedName).transaction(curr => {
+            return (type === 'IN' ? (curr || 0) - qty : (curr || 0) + qty);
+        }, (err, commit) => {
+            if(commit) {
+                database.ref('logs/' + logKey).remove()
+                .then(() => alert("✅ Entry Removed!"));
+            }
+        });
+    }
+
+    // Pending Approvals Listener
+    database.ref('pending_requests').on('value', snap => {
+        const list = snap.val() || {};
+        const tbody = document.querySelector('#pendingTable tbody');
+        tbody.innerHTML = '';
+        const keys = Object.keys(list);
+        document.getElementById('pending-count-badge').innerText = keys.length;
+        keys.forEach(k => {
+            const l = list[k];
+            tbody.innerHTML += `<tr><td>${l.time}</td><td>${l.user}</td><td>${l.name}</td><td>${l.qty}</td>
+                <td style="color:${l.type === 'IN' ? '#34d399' : '#fb7185'}; font-weight:700;">${l.type}</td>
+                <td><span class="challan-badge">${l.challan}</span></td>
+                <td>
+                    <div class="log-actions">
+                        <button class="btn-mini btn-success" onclick='executeFinalUpdate(${JSON.stringify(l)}, "${k}")'><i class="fas fa-check"></i></button>
+                        <button class="btn-mini btn-danger" onclick="database.ref('pending_requests/${k}').remove()"><i class="fas fa-times"></i></button>
+                    </div>
+                </td></tr>`;
+        });
+    });
+
+    // Inventory Data Listener
     database.ref('inventory').on('value', snap => {
         const data = snap.val() || {};
         const vBody = document.querySelector('#vesselTable tbody');
@@ -298,47 +456,113 @@
         document.getElementById('stat-total-items').innerText = count;
     });
 
+    // Logs Listener with Logic for Edit/Delete Buttons
     database.ref('logs').on('value', snap => {
         const logs = snap.val() || {};
         const vLog = document.querySelector('#vesselLogTable tbody');
         const aLog = document.querySelector('#accLogTable tbody');
         vLog.innerHTML = ''; aLog.innerHTML = '';
-        let tIn = 0, tOut = 0;
-        Object.values(logs).reverse().forEach(l => {
-            const row = `<tr><td>${l.time}</td><td>${l.name}</td><td>${l.qty}</td><td>${l.type}</td><td>${l.user}</td></tr>`;
+        
+        Object.keys(logs).reverse().forEach(key => {
+            const l = logs[key];
+            const challanTag = l.challan ? `<span class="challan-badge">${l.challan}</span>` : 'N/A';
+            let actionHtml = '';
+            
+            // Show action buttons only for Sazzad Hossain
+            if(loggedInUser === "Sazzad Hossain") {
+                actionHtml = `<div class="log-actions">
+                    <button class="btn-mini btn-edit-log" onclick="editLogEntry('${key}', ${l.qty}, '${l.category}', '${l.name}', '${l.type}')"><i class="fas fa-edit"></i></button>
+                    <button class="btn-mini btn-delete-log" onclick="deleteLogEntry('${key}', ${l.qty}, '${l.category}', '${l.name}', '${l.type}')"><i class="fas fa-times"></i></button>
+                </div>`;
+            }
+            
+            const row = `<tr><td>${l.time}</td><td>${l.name}</td><td>${l.qty}</td><td>${l.type}</td><td>${challanTag}</td><td>${l.user}</td><td>${actionHtml}</td></tr>`;
             if(l.category === 'VESSEL') vLog.innerHTML += row; else aLog.innerHTML += row;
-            if(l.type === 'IN') tIn += l.qty; else tOut += l.qty;
         });
-        document.getElementById('stat-total-in').innerText = tIn;
-        document.getElementById('stat-total-out').innerText = tOut;
+        applyLogFilters('vesselLogTable'); applyLogFilters('accLogTable');
     });
+
+    function setLogType(tableId, type, btn) {
+        btn.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLogFilters[tableId] = type;
+        applyLogFilters(tableId);
+    }
+
+    function applyLogFilters(tableId) {
+        const searchVal = document.getElementById(tableId === 'vesselLogTable' ? 'vLogSearch' : 'aLogSearch').value.toLowerCase();
+        const dateFrom = document.getElementById(tableId === 'vesselLogTable' ? 'vLogDateFrom' : 'aLogDateFrom').value;
+        const dateTo = document.getElementById(tableId === 'vesselLogTable' ? 'vLogDateTo' : 'aLogDateTo').value;
+        const typeFilter = currentLogFilters[tableId];
+        const rows = document.getElementById(tableId).getElementsByTagName("tr");
+        
+        for (let i = 1; i < rows.length; i++) {
+            const timeCell = rows[i].cells[0].innerText;
+            const nameCell = rows[i].cells[1].innerText.toLowerCase();
+            const typeCell = rows[i].cells[3].innerText.toUpperCase();
+            const challanCell = rows[i].cells[4] ? rows[i].cells[4].innerText.toLowerCase() : "";
+            
+            let matchesDate = true;
+            if(dateFrom || dateTo) {
+                const rowDate = new Date(timeCell).toLocaleDateString('en-CA');
+                if(dateFrom && rowDate < dateFrom) matchesDate = false;
+                if(dateTo && rowDate > dateTo) matchesDate = false;
+            }
+            const matchesSearch = nameCell.includes(searchVal) || challanCell.includes(searchVal);
+            const matchesType = (typeFilter === 'ALL' || typeCell === typeFilter);
+            rows[i].style.display = (matchesSearch && matchesType && matchesDate) ? "" : "none";
+        }
+        updateLiveStats();
+    }
+
+    function updateLiveStats() {
+        database.ref('logs').once('value', snap => {
+            const logs = snap.val() || {};
+            let tIn = 0, tOut = 0;
+            Object.values(logs).forEach(l => { if(l.type === 'IN') tIn += l.qty; else tOut += l.qty; });
+            document.getElementById('stat-total-in').innerText = tIn;
+            document.getElementById('stat-total-out').innerText = tOut;
+        });
+    }
 
     function filterTable(id, col, val) {
         const rows = document.getElementById(id).getElementsByTagName("tr");
-        for (let i = 1; i < rows.length; i++) {
-            rows[i].style.display = rows[i].cells[col].innerText.toLowerCase().includes(val.toLowerCase()) ? "" : "none";
-        }
+        for (let i = 1; i < rows.length; i++) { rows[i].style.display = rows[i].cells[col].innerText.toLowerCase().includes(val.toLowerCase()) ? "" : "none"; }
     }
 
     function downloadExcel(id) {
-        const rows = Array.from(document.getElementById(id).rows).filter(r => r.style.display !== "none");
-        const nt = document.createElement("table");
-        rows.forEach(r => nt.appendChild(r.cloneNode(true)));
-        XLSX.writeFile(XLSX.utils.table_to_book(nt), `WaterBirds_${id}.xlsx`);
+        const visibleRows = Array.from(document.getElementById(id).rows).filter(r => r.style.display !== "none");
+        const newTable = document.createElement("table");
+        visibleRows.forEach(r => {
+            const clone = r.cloneNode(true);
+            if(clone.cells.length > 6) clone.deleteCell(-1); // Remove Action column for Excel
+            newTable.appendChild(clone);
+        });
+        XLSX.writeFile(XLSX.utils.table_to_book(newTable), `WaterBirds_Report.xlsx`);
     }
 
     function printTable(id, title) {
-        const rows = Array.from(document.getElementById(id).rows).filter(r => r.style.display !== "none");
-        let html = ""; rows.forEach(r => html += r.outerHTML);
-        const win = document.getElementById('print-frame').contentWindow;
-        win.document.open();
-        win.document.write(`<html><head><style>table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:8px;}</style></head><body><h2>${title}</h2><table>${html}</table></body></html>`);
+        const visibleRows = Array.from(document.getElementById(id).rows).filter(r => r.style.display !== "none");
+        let html = `<html><head><title>${title}</title><style>table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ddd;padding:8px;text-align:left;}</style></head><body><h2>${title}</h2><table>`;
+        visibleRows.forEach(r => {
+            let rowHtml = '<tr>';
+            Array.from(r.cells).forEach((cell, idx) => {
+                if (idx < 6) rowHtml += `<td>${cell.innerText}</td>`;
+            });
+            rowHtml += '</tr>';
+            html += rowHtml;
+        });
+        html += '</table></body></html>';
+        const win = window.open('', '_blank');
+        win.document.write(html);
         win.document.close();
-        setTimeout(() => { win.focus(); win.print(); }, 500);
+        win.print();
     }
 
     function resetAllData() {
-        if(prompt("PIN:") === "866199") { database.ref('inventory').remove(); database.ref('logs').remove(); location.reload(); }
+        if(confirm("DANGER: This will delete ALL stock and logs! Proceed?")) {
+            database.ref('/').update({ inventory: null, logs: null, pending_requests: null });
+        }
     }
 </script>
 </body>
