@@ -10,9 +10,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root { 
             --bg-color: #020617;
@@ -56,10 +57,12 @@
         .btn-success { background: var(--success); color: #020617; }
         .btn-danger { background: var(--danger); color: white; }
         
-        .log-filter-btns { display: flex; gap: 5px; margin-bottom: 15px; }
+        .log-filter-btns { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
+        .date-filter-group { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 12px; border: 1px solid var(--glass-border); margin-left: auto; }
+        .date-input { width: auto !important; margin: 0 !important; padding: 5px !important; font-size: 11px !important; }
+
         .btn-filter { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: transparent; color: var(--text-dim); cursor: pointer; font-size: 11px; font-weight: 600; }
         .btn-filter.active { background: var(--primary); color: white; border-color: var(--primary); }
-
         table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
         th { text-align: left; padding: 12px 20px; color: var(--text-dim); font-size: 11px; text-transform: uppercase; }
         td { padding: 16px 20px; background: rgba(255,255,255,0.03); color: var(--text-main); font-size: 13px; }
@@ -68,16 +71,16 @@
         
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--glass-border); border-radius: 14px; background: rgba(0,0,0,0.3); color: white; outline: none; }
         .search-box { width: 200px; padding: 8px 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 10px; color: white; font-size: 12px; }
-
         .tab-page { display: none; }
         .tab-page.active { display: block; }
         .challan-badge { background: rgba(129, 140, 248, 0.2); color: var(--primary); padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; }
         .pending-badge { background: var(--danger); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; position: absolute; right: 10px; top: 18px; }
         .btn-mini { padding: 6px 10px; font-size: 12px; border-radius: 8px; border: none; cursor: pointer; }
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 5px; }
     </style>
 </head>
-
 <body>
+
 <div class="sidebar">
     <div class="sidebar-header">
         <div class="logo-box"><div class="logo-text">WATER BIRDS<br><span style="color:var(--primary)">LIMITED</span></div></div>
@@ -225,10 +228,19 @@
                         <button class="btn btn-success" onclick="downloadPDF('vesselLogTable', 'Vessel History Log')"><i class="fas fa-file-pdf"></i> PDF</button>
                     </div>
                 </div>
+                
                 <div class="log-filter-btns">
-                    <button class="btn-filter active" id="vessel-all-btn" onclick="filterLogByType('vesselLogTable', 'ALL', this)">All</button>
+                    <button class="btn-filter active" onclick="filterLogByType('vesselLogTable', 'ALL', this)">All</button>
                     <button class="btn-filter" onclick="filterLogByType('vesselLogTable', 'IN', this)">Stock In</button>
                     <button class="btn-filter" onclick="filterLogByType('vesselLogTable', 'OUT', this)">Stock Out</button>
+                    
+                    <div class="date-filter-group">
+                        <span style="font-size: 11px; color: var(--text-dim);">Date:</span>
+                        <input type="date" id="vesselLogFrom" class="date-input">
+                        <span style="font-size: 11px; color: var(--text-dim);">To</span>
+                        <input type="date" id="vesselLogTo" class="date-input">
+                        <button class="btn-mini btn-primary" onclick="applyLogFilters('vesselLogTable')">Filter</button>
+                    </div>
                 </div>
                 <table id="vesselLogTable"><thead><tr><th>Time</th><th>Item</th><th>Qty</th><th>Type</th><th>Challan</th><th>User</th></tr></thead><tbody></tbody></table>
             </div>
@@ -241,10 +253,19 @@
                         <button class="btn btn-success" onclick="downloadPDF('accLogTable', 'Accessories History Log')"><i class="fas fa-file-pdf"></i> PDF</button>
                     </div>
                 </div>
+                
                 <div class="log-filter-btns">
-                    <button class="btn-filter active" id="acc-all-btn" onclick="filterLogByType('accLogTable', 'ALL', this)">All</button>
+                    <button class="btn-filter active" onclick="filterLogByType('accLogTable', 'ALL', this)">All</button>
                     <button class="btn-filter" onclick="filterLogByType('accLogTable', 'IN', this)">Stock In</button>
                     <button class="btn-filter" onclick="filterLogByType('accLogTable', 'OUT', this)">Stock Out</button>
+                    
+                    <div class="date-filter-group">
+                        <span style="font-size: 11px; color: var(--text-dim);">Date:</span>
+                        <input type="date" id="accLogFrom" class="date-input">
+                        <span style="font-size: 11px; color: var(--text-dim);">To</span>
+                        <input type="date" id="accLogTo" class="date-input">
+                        <button class="btn-mini btn-primary" onclick="applyLogFilters('accLogTable')">Filter</button>
+                    </div>
                 </div>
                 <table id="accLogTable"><thead><tr><th>Time</th><th>Item</th><th>Qty</th><th>Type</th><th>Challan</th><th>User</th></tr></thead><tbody></tbody></table>
             </div>
@@ -410,7 +431,9 @@
         Object.keys(logs).reverse().forEach(key => {
             const l = logs[key];
             const typeCol = l.type === 'IN' ? '#34d399' : '#fb7185';
-            const row = `<tr data-type="${l.type}"><td>${l.time}</td><td>${l.name}</td><td>${l.qty}</td><td style="color:${typeCol}; font-weight:700;">${l.type}</td><td><span class="challan-badge">${l.challan}</span></td><td>${l.user}</td></tr>`;
+            // Store raw timestamp for filtering
+            const timestamp = new Date(l.time).getTime();
+            const row = `<tr data-type="${l.type}" data-time="${timestamp}"><td>${l.time}</td><td>${l.name}</td><td>${l.qty}</td><td style="color:${typeCol}; font-weight:700;">${l.type}</td><td><span class="challan-badge">${l.challan}</span></td><td>${l.user}</td></tr>`;
             if(l.category === 'VESSEL') vLog.innerHTML += row; else aLog.innerHTML += row;
             if(l.type === 'IN') tIn += l.qty; else tOut += l.qty;
         });
@@ -430,7 +453,6 @@
         });
     });
 
-    // Combined Filters for History
     function filterLogByType(tableID, type, btn) {
         const parent = btn.parentElement;
         parent.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
@@ -442,19 +464,36 @@
         applyLogFilters(tableID);
     }
 
+    // New Enhanced Filter Logic with Date Range
     function applyLogFilters(tableID) {
         const table = document.getElementById(tableID);
-        const searchVal = table.parentElement.querySelector('.search-box').value.toLowerCase();
-        const activeTypeBtn = table.parentElement.querySelector('.btn-filter.active').innerText;
+        const parent = table.closest('.card');
+        const searchVal = parent.querySelector('.search-box').value.toLowerCase();
+        const activeTypeBtn = parent.querySelector('.btn-filter.active').innerText;
+        
         const filterType = activeTypeBtn === 'Stock In' ? 'IN' : (activeTypeBtn === 'Stock Out' ? 'OUT' : 'ALL');
-        const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+        
+        // Date inputs
+        const fromInput = parent.querySelector('input[id$="LogFrom"]').value;
+        const toInput = parent.querySelector('input[id$="LogTo"]').value;
+        
+        const fromDate = fromInput ? new Date(fromInput).setHours(0,0,0,0) : null;
+        const toDate = toInput ? new Date(toInput).setHours(23,59,59,999) : null;
 
+        const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
         for (let row of rows) {
             const text = row.innerText.toLowerCase();
             const rowType = row.getAttribute('data-type');
+            const rowTimestamp = parseInt(row.getAttribute('data-time'));
+
             const matchesSearch = text.includes(searchVal);
             const matchesType = (filterType === 'ALL' || rowType === filterType);
-            row.style.display = (matchesSearch && matchesType) ? "" : "none";
+            
+            let matchesDate = true;
+            if (fromDate && rowTimestamp < fromDate) matchesDate = false;
+            if (toDate && rowTimestamp > toDate) matchesDate = false;
+
+            row.style.display = (matchesSearch && matchesType && matchesDate) ? "" : "none";
         }
     }
 
@@ -491,5 +530,6 @@
         if(confirm("DANGER: Clear all data forever?")) { database.ref('/').remove(); location.reload(); }
     }
 </script>
+
 </body>
 </html>
