@@ -121,7 +121,6 @@
                     <option value="Rokibul Islam">Rokibul Islam</option>
                     <option value="Mobin Bin Mihad">Mobin Bin Mihad</option>
                     <option value="Md.alamin">Md.alamin</option>
-                    <option value="Mdshipon">Md.shipon</option>
                 </select>
                 <input type="password" id="userPin" placeholder="Enter PIN">
                 <button class="btn btn-primary" style="width: 100%;" onclick="loginProfile()">Login</button>
@@ -286,7 +285,7 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
-    let USERS_LIST = { "Sazzad Hossain": "866199", "Rokibul Islam": "1122", "Mobin Bin Mihad": "1122", "Md.alamin": "1122","Md.shipon":"1122" };
+    let USERS_LIST = { "Sazzad Hossain": "866199", "Rokibul Islam": "1122", "Mobin Bin Mihad": "1122", "Md.alamin": "1122" };
     let loggedInUser = null;
     let currentLogFilters = { vesselLogTable: 'ALL', accLogTable: 'ALL' };
 
