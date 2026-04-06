@@ -3,16 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Water Birds Limited | ERP PRO</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Water Birds Limited | ERP PRO (Cloud)</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -92,8 +82,10 @@
         <div class="nav-item" onclick="showTab('entry')"><i class="fas fa-edit"></i> Finish Goods</div>
         <div class="nav-item" onclick="showTab('inventory-entry')"><i class="fas fa-boxes"></i> Store Goods</div>
         <div class="nav-item" onclick="showTab('stock-view')"><i class="fas fa-warehouse"></i> Inventory</div>
-        <div class="nav-item" onclick="showTab('logs')"><i class="fas fa-history"></i> Logs</div>
+        <div class="nav-item" onclick="showTab('finish-logs')"><i class="fas fa-history"></i> Finish Goods Logs</div>
+        <div class="nav-item" onclick="showTab('store-logs')"><i class="fas fa-clipboard-list"></i> Store Goods Logs</div>
         <div class="nav-item" id="nav-pending" style="display:none;" onclick="showTab('pending')"><i class="fas fa-clock"></i> Pending <span id="pending-count-badge" class="pending-badge">0</span></div>
+        <div class="nav-item" id="nav-settings" style="display:none;" onclick="showTab('settings')"><i class="fas fa-cog"></i> Settings</div>
     </div>
     <div style="padding: 20px;"><button id="logout-btn" class="btn btn-danger" style="width:100%; display:none;" onclick="logout()">Logout</button></div>
 </div>
@@ -184,13 +176,34 @@
             </div>
         </div>
 
-        <div id="logs" class="tab-page">
+        <div id="finish-logs" class="tab-page">
             <div class="card">
-                <h3>History Logs</h3>
-                <table id="logTable">
+                <h3>Finish Goods History Logs</h3>
+                <table id="finishLogTable">
                     <thead><tr><th>Time</th><th>User</th><th>Item</th><th>Qty</th><th>Type</th></tr></thead>
                     <tbody></tbody>
                 </table>
+            </div>
+        </div>
+
+        <div id="store-logs" class="tab-page">
+            <div class="card">
+                <h3>Store Goods History Logs</h3>
+                <table id="storeLogTable">
+                    <thead><tr><th>Time</th><th>User</th><th>Item</th><th>Qty</th><th>Type</th><th>Ref/Challan</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="settings" class="tab-page">
+            <div class="card" style="max-width: 400px; margin: 0 auto;">
+                <h3>Account Settings</h3>
+                <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 20px;">Change your login PIN</p>
+                <input type="password" id="oldPin" placeholder="Current PIN">
+                <input type="password" id="newPin" placeholder="New PIN">
+                <input type="password" id="confirmNewPin" placeholder="Confirm New PIN">
+                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="changePassword()">Update PIN</button>
             </div>
         </div>
     </div>
@@ -210,10 +223,10 @@
 
     let db;
     let loggedInUser = null;
-    let finishInventory = {}, storeInventory = {}, logsData = [], pendingRequests = [], storeCart = [];
+    let finishInventory = {}, storeInventory = {}, logsData = [], pendingRequests = [], storeCart = [], userCredentials = {};
     let currentFinishCat = 'TANK', currentStoreCat = 'TANK';
 
-    const USERS = { "Rohul Amin":"rohul#@123","Sazzad Hossain": "199866", "Rokibul Islam": "1122", "Md.alamin": "1122", "Md.shipon":"5688" };
+    const DEFAULT_USERS = { "Rohul Amin":"rohul#@123","Sazzad Hossain": "199866", "Rokibul Islam": "1122", "Md.alamin": "1122", "Md.shipon":"5688" };
 
     const ITEM_LISTS = {
         finish: {
@@ -238,6 +251,8 @@
             storeInventory = data.storeInventory || {};
             logsData = data.logsData || [];
             pendingRequests = data.pendingRequests || [];
+            // পিনগুলো যাতে রিলোড করলে না হারায়, সে জন্য সরাসরি ডাটাবেস থেকে লোড করা হচ্ছে
+            userCredentials = data.userCredentials || DEFAULT_USERS; 
             document.getElementById('connection-status').innerHTML = '<i class="fas fa-check-circle"></i> ONLINE';
             renderAll();
         });
@@ -247,7 +262,7 @@
     function login() {
         const user = document.getElementById('userSelect').value;
         const pin = document.getElementById('userPin').value;
-        if(USERS[user] === pin) {
+        if(userCredentials[user] === pin) {
             loggedInUser = user;
             document.getElementById('display-name').innerText = user;
             document.getElementById('login-section').style.display = 'none';
@@ -256,8 +271,26 @@
             document.getElementById('entry-locked').style.display = 'none';
             document.getElementById('store-locked').style.display = 'none';
             document.getElementById('logout-btn').style.display = 'block';
+            document.getElementById('nav-settings').style.display = 'flex';
             if(user === "Sazzad Hossain") document.getElementById('nav-pending').style.display = 'flex';
         } else alert("Invalid PIN!");
+    }
+
+    function changePassword() {
+        const oldPin = document.getElementById('oldPin').value;
+        const newPin = document.getElementById('newPin').value;
+        const confirmPin = document.getElementById('confirmNewPin').value;
+
+        if(userCredentials[loggedInUser] !== oldPin) return alert("Current PIN is incorrect!");
+        if(newPin.length < 4) return alert("New PIN must be at least 4 digits!");
+        if(newPin !== confirmPin) return alert("New PINs do not match!");
+
+        userCredentials[loggedInUser] = newPin;
+        saveToCloud(); // ডাটাবেসে সেভ করা হচ্ছে যাতে রিফ্রেশ করলে নষ্ট না হয়
+        alert("PIN updated and saved to cloud!");
+        document.getElementById('oldPin').value = '';
+        document.getElementById('newPin').value = '';
+        document.getElementById('confirmNewPin').value = '';
     }
 
     function processAction(type, mode) {
@@ -307,7 +340,7 @@
     }
 
     function saveToCloud() {
-        db.ref('erp_pro_data').set({ finishInventory, storeInventory, logsData, pendingRequests });
+        db.ref('erp_pro_data').set({ finishInventory, storeInventory, logsData, pendingRequests, userCredentials });
     }
 
     function renderAll() {
@@ -328,10 +361,18 @@
             pBody.innerHTML += `<tr><td>${p.time}</td><td>${p.user}</td><td>${p.name}</td><td>${p.qty}</td><td>${p.type}</td><td><button class="btn btn-success" onclick='commitData(${JSON.stringify(p)}, ${idx})'>OK</button></td></tr>`;
         });
 
-        const lBody = document.querySelector('#logTable tbody');
-        lBody.innerHTML = '';
-        [...logsData].reverse().slice(0, 30).forEach(l => {
-            lBody.innerHTML += `<tr><td>${l.time}</td><td>${l.user}</td><td>${l.name}</td><td>${l.qty}</td><td>${l.type}</td></tr>`;
+        const fLogBody = document.querySelector('#finishLogTable tbody');
+        const sLogBody = document.querySelector('#storeLogTable tbody');
+        fLogBody.innerHTML = '';
+        sLogBody.innerHTML = '';
+        
+        [...logsData].reverse().forEach(l => {
+            const row = `<tr><td>${l.time}</td><td>${l.user}</td><td>${l.name}</td><td>${l.qty}</td><td>${l.type}</td>${l.mode === 'STORE' ? `<td>${l.challan || '-'}</td>` : ''}</tr>`;
+            if(l.mode === 'FINISH') {
+                fLogBody.innerHTML += row;
+            } else if(l.mode === 'STORE') {
+                sLogBody.innerHTML += row;
+            }
         });
     }
 
