@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Water Birds Limited | ERP PRO (Cloud)</title>
+    <title>WATER BIRDS LIMITED | ERP PRO</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
@@ -37,8 +36,8 @@
         }
         .sidebar { width: 280px; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(25px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; }
         .sidebar-header { padding: 40px 25px; }
-        .logo-box { padding: 20px; border-radius: 24px; background: linear-gradient(145deg, rgba(255,255,255,0.05), transparent); border: 1px solid var(--glass-border); text-align: center; }
-        .logo-text { font-size: 16px; font-weight: 800; letter-spacing: 1px; color: #fff; line-height: 1.4; text-transform: uppercase; }
+        .logo-box { padding: 25px; border-radius: 24px; background: linear-gradient(145deg, rgba(255,255,255,0.05), transparent); border: 1px solid var(--glass-border); text-align: center; }
+        .logo-text { font-size: 18px; font-weight: 800; letter-spacing: 2px; color: #fff; line-height: 1.4; }
         
         .sidebar-menu { flex: 1; padding: 15px; }
         .nav-item { padding: 16px 20px; border-radius: 16px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; color: var(--text-dim); font-weight: 600; margin-bottom: 8px; position: relative; }
@@ -47,163 +46,235 @@
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .top-bar { height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--glass-border); }
         .content-area { padding: 40px; overflow-y: auto; flex: 1; }
-        .card { background: var(--card-bg); border-radius: 28px; padding: 30px; border: 1px solid var(--glass-border); margin-bottom: 30px; backdrop-filter: blur(15px); }
+        .card { background: var(--card-bg); border-radius: 28px; padding: 30px; border: 1px solid var(--glass-border); margin-bottom: 30px; backdrop-filter: blur(15px); animation: fadeIn 0.5s ease-out; }
         
-        .product-tabs { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; flex-wrap: wrap; }
-        .p-tab { padding: 10px 15px; cursor: pointer; border-radius: 10px; font-size: 11px; font-weight: 700; color: var(--text-dim); transition: 0.3s; background: rgba(255,255,255,0.02); border: 1px solid transparent; text-transform: uppercase; }
-        .p-tab.active { background: var(--primary); color: white; border-color: var(--primary-glow); }
-
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 35px; }
+        .stat-card { background: rgba(255,255,255,0.02); padding: 25px; border-radius: 28px; border: 1px solid var(--glass-border); }
+        .stat-card h2 { font-size: 32px; font-weight: 800; color: var(--primary); }
+        
         .btn { border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; font-size: 13px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: #020617; }
         .btn-danger { background: var(--danger); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--glass-border); color: var(--text-dim); }
+        .btn-outline.active { background: var(--primary); color: white; border-color: var(--primary); }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { text-align: left; padding: 15px; color: var(--text-dim); font-size: 13px; border-bottom: 1px solid var(--glass-border); }
-        td { padding: 15px; border-bottom: 1px solid var(--glass-border); font-size: 14px; }
+        .log-filter-btns { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .date-filter-group { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 12px; border: 1px solid var(--glass-border); }
+        .date-input { width: auto !important; margin: 0 !important; padding: 5px !important; font-size: 11px !important; }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        th { text-align: left; padding: 12px 20px; color: var(--text-dim); font-size: 11px; text-transform: uppercase; }
+        td { padding: 16px 20px; background: rgba(255,255,255,0.03); color: var(--text-main); font-size: 13px; }
+        td:first-child { border-radius: 14px 0 0 14px; }
+        td:last-child { border-radius: 0 14px 14px 0; }
         
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--glass-border); border-radius: 14px; background: rgba(0,0,0,0.3); color: white; outline: none; }
         .tab-page { display: none; }
         .tab-page.active { display: block; }
+        .challan-badge { background: rgba(129, 140, 248, 0.2); color: var(--primary); padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; }
         .pending-badge { background: var(--danger); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; position: absolute; right: 10px; top: 18px; }
+        .btn-mini { padding: 6px 10px; font-size: 12px; border-radius: 8px; border: none; cursor: pointer; }
         .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 5px; }
+        
+        .download-group { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid var(--glass-border); padding-top: 15px; }
     </style>
 </head>
-<body onload="initFirebase()">
+<body>
 
 <div class="sidebar">
     <div class="sidebar-header">
-        <div class="logo-box">
-            <div class="logo-text">Water Birds Limited<br><span style="color:var(--primary); font-size: 12px;">ERP PRO SYSTEM</span></div>
-        </div>
+        <div class="logo-box"><div class="logo-text">WATER BIRDS<br><span style="color:var(--primary)">LIMITED</span></div></div>
     </div>
     <div class="sidebar-menu">
         <div class="nav-item active" onclick="showTab('dashboard')"><i class="fas fa-th-large"></i> Dashboard</div>
-        <div class="nav-item" onclick="showTab('entry')"><i class="fas fa-edit"></i> Finish Goods</div>
-        <div class="nav-item" onclick="showTab('inventory-entry')"><i class="fas fa-boxes"></i> Store Goods</div>
-        <div class="nav-item" onclick="showTab('stock-view')"><i class="fas fa-warehouse"></i> Inventory</div>
-        <div class="nav-item" onclick="showTab('finish-logs')"><i class="fas fa-history"></i> Finish Goods Logs</div>
-        <div class="nav-item" onclick="showTab('store-logs')"><i class="fas fa-clipboard-list"></i> Store Goods Logs</div>
+        <div class="nav-item" onclick="showTab('entry')"><i class="fas fa-edit"></i> Stock Entry</div>
+        <div class="nav-item" onclick="showTab('inventory')"><i class="fas fa-boxes"></i> Inventory</div>
+        <div class="nav-item" onclick="showTab('logs')"><i class="fas fa-history"></i> Stock Logs</div>
         <div class="nav-item" id="nav-pending" style="display:none;" onclick="showTab('pending')"><i class="fas fa-clock"></i> Pending <span id="pending-count-badge" class="pending-badge">0</span></div>
-        <div class="nav-item" id="nav-settings" style="display:none;" onclick="showTab('settings')"><i class="fas fa-cog"></i> Settings</div>
+        <div class="nav-item" id="nav-settings" onclick="showTab('settings')"><i class="fas fa-cog"></i> Settings</div>
     </div>
-    <div style="padding: 20px;"><button id="logout-btn" class="btn btn-danger" style="width:100%; display:none;" onclick="logout()">Logout</button></div>
+    <div style="padding: 20px;"><button id="logout-btn" class="btn btn-danger" style="width:100%; display:none;" onclick="logoutProfile()">Logout</button></div>
 </div>
 
 <div class="main">
     <div class="top-bar">
         <div id="display-name" style="font-weight:700;">Guest Mode</div>
-        <div id="connection-status" style="color:var(--warning); font-size: 12px;"><i class="fas fa-sync fa-spin"></i> CONNECTING...</div>
+        <div style="color: var(--success); font-weight: 700; font-size: 12px;"><i class="fas fa-circle"></i> SERVER ONLINE</div>
     </div>
 
     <div class="content-area">
         <div id="dashboard" class="tab-page active">
+            <div class="stats-grid">
+                <div class="stat-card"><p>Total Items</p><h2 id="stat-total-items">0</h2></div>
+                <div class="stat-card"><p>Total In</p><h2 id="stat-total-in">0</h2></div>
+                <div class="stat-card"><p>Total Out</p><h2 id="stat-total-out">0</h2></div>
+            </div>
             <div id="login-section" class="card" style="max-width: 400px; margin: 0 auto; text-align: center;">
-                <h3>User Login</h3>
+                <h3>System Login</h3>
                 <select id="userSelect">
                     <option value="">Select User</option>
-                    <option value="Rohul Amin">Rohul Amin</option>
                     <option value="Sazzad Hossain">Sazzad Hossain</option>
                     <option value="Rokibul Islam">Rokibul Islam</option>
                     <option value="Md.alamin">Md.alamin</option>
                     <option value="Md.shipon">Md.shipon</option>
                 </select>
                 <input type="password" id="userPin" placeholder="Enter PIN">
-                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="login()">Login</button>
+                <button class="btn btn-primary" style="width: 100%;" onclick="loginProfile()">Login</button>
+            </div>
+            <div id="admin-controls" class="card" style="display:none; border: 1px dashed var(--danger);">
+                <button class="btn btn-danger" onclick="resetAllData()">Reset Database</button>
             </div>
         </div>
 
         <div id="entry" class="tab-page">
-            <div id="entry-container" style="display:none;" class="card">
-                <div class="product-tabs">
-                    <div class="p-tab active" onclick="switchTabStyle('TANK', 'finish', this)">TANK</div>
-                    <div class="p-tab" onclick="switchTabStyle('HDPE', 'finish', this)">HDPE PIPE</div>
-                    <div class="p-tab" onclick="switchTabStyle('VESSEL', 'finish', this)">VESSEL</div>
-                </div>
-                <select id="finishItemList"></select>
-                <input type="number" id="finishQty" placeholder="Quantity">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
-                    <button class="btn btn-success" onclick="processAction('IN', 'FINISH')">GOODS IN</button>
-                    <button class="btn btn-danger" onclick="processAction('OUT', 'FINISH')">GOODS OUT</button>
-                </div>
-            </div>
-            <div id="entry-locked" class="card" style="text-align:center;">Login to unlock</div>
-        </div>
+            <div id="entry-container" style="display:none; grid-template-columns: 1fr; gap:25px;">
+                <div class="card">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h3>Select Item</h3>
+                            <select id="entryCategory" onchange="toggleEntrySelect()">
+                                <option value="VESSEL">Vessel</option>
+                                <option value="PIPE">Pipe</option>
+                                <option value="TANK">Tank</option>
+                                <option value="MAINTENANCE">Maintenance</option>
+                            </select>
+                            <select id="vesselList"style="display:none;">
+<option value="Washing Agent Ethano">Washing Agent Ethano</option>
+<option value ="
+Surgical Hand Gloves">
+Surgical Hand Gloves</option>
+<option value ="
+Carton Tape 2.5 Inch">
+Carton Tape 2.5 Inch</option>
 
-        <div id="inventory-entry" class="tab-page">
-            <div id="store-container" style="display:none;" class="card">
-                <div class="product-tabs">
-                    <div class="p-tab active" onclick="switchTabStyle('TANK', 'store', this)">TANK</div>
-                    <div class="p-tab" onclick="switchTabStyle('HDPE', 'store', this)">HDPE</div>
-                    <div class="p-tab" onclick="switchTabStyle('VESSEL', 'store', this)">VESSEL</div>
-                    <div class="p-tab" onclick="switchTabStyle('MAINTENANCE', 'store', this)">MAINTENANCE</div>
-                </div>
-                <select id="storeItemList"></select>
-                <input type="number" id="storeQty" placeholder="Quantity">
-                <button class="btn btn-primary" style="width:100%;" onclick="processAction('IN', 'STORE')">STOCK IN</button>
-                <button class="btn btn-warning" style="width:100%; margin-top: 10px; color: black;" onclick="addToCart()">ADD TO OUT CART</button>
-                
-                <div id="cart-section" style="margin-top: 30px; border-top: 1px solid var(--glass-border); padding-top: 20px;">
-                    <h3>Out Cart</h3>
-                    <div id="cartItems"></div>
-                    <input type="text" id="challanNo" placeholder="Reference / Challan No">
-                    <button class="btn btn-danger" style="width:100%;" onclick="submitBulkOut()">CONFIRM BULK OUT</button>
+                            </select>
+                            <select id="pipeList" style="display:none;">
+                                <option value="DOP">DOP</option>
+                                <option value="Screen Printing Ink Black">Screen Printing Ink Black</option>
+                                <option value="Screen Printing Ink White">Screen Printing Ink White</option>
+                            
+                                <option value="Wash Solvent">Wash Solvent</option>
+                                <option value="Plastic Rope For Packaging">Plastic Rope For Packaging</option>
+                            </select>
+                            <select id="tankList" style="display:none;">
+                                <option value="3/4 Inch Brass Fitting">3/4 Inch Brass Fitting</option>
+                                <option value="1 Inch Brass Fitting">1 Inch Brass Fitting</option>
+                                <option value="1.5 Inch Brass Fitting">1.5 Inch Brass Fitting</option>
+                                <option value="3/4 Inch PVC Bond Plug">3/4 Inch PVC Bond Plug</option>
+                                <option value="1 Inch PVC Bond Plug">1 Inch PVC Bond Plug</option>
+                                <option value="Cyclohexanone">Cyclohexanone</option>
+                                <option value="Hexa Blade">Hexa Blade</option>
+                                <option value="Sticky Super Glue">Sticky Super Glue</option>
+                                <option value="Torch Light">Torch Light</option>
+                                <option value="Nidaperm White">Nidaperm White</option>
+                                <option value="Nidaperm Raducher">Nidaperm Raducher</option>
+                                <option value="Nidaperm Black">Nidaperm Black</option>
+                                <option value="Hand Burner">Hand Burner</option>
+                                <option value="Air Plug">Air Plug</option>
+                                <option value="Wire Brush, Wooden">Wire Brush, Wooden</option>
+                                <option value="Silicon Mold Release Compound">Silicon Mold Release Compound</option>
+                                <option value="1 Inch PVC Tank Adapter">1 Inch PVC Tank Adapter</option>
+                                <option value="3/4 Inch PVC Tank Adapter">3/4 Inch PVC Tank Adapter</option>
+                                <option value="1.5 Inch PVC Tank Adapter">1.5 Inch PVC Tank Adapter</option>
+                                <option value="2 Inch PVC Tank Adapter">2 Inch PVC Tank Adapter</option>
+                                <option value="Anticutter Body">Anticutter Body</option>
+                                <option value="Soldering Iron">Soldering Iron</option>
+                                <option value="Soldering iron coil">Soldering iron coil</option>
+                                <option value="Screen Print Cloth">Screen Print Cloth</option>
+                                <option value="PVC Tape">PVC Tape</option>
+                                <option value="SS Drill Bit - 4.5mm">SS Drill Bit - 4.5mm</option>
+                                <option value="Hand saw cutter machine">Hand saw cutter machine</option>
+                                <option value="Utility Knife Blade">Utility Knife Blade</option>
+                                <option value="Blade For HDPE Pipe Cutter Machines">Blade For HDPE Pipe Cutter Machines</option>
+                                <option value="Pneumatic nipple ( 10X13 mm)">Pneumatic nipple ( 10X13 mm)</option>
+                                <option value="Rivit 575 with Washer">Rivit 575 with Washer</option>
+                                <option value="HDPE Nala Sheet Thickness-3mm">HDPE Nala Sheet Thickness-3mm</option>
+                                <option value="Sonacote for Screen Print">Sonacote for Screen Print</option>
+                                <option value="Silicone Rubber 2'×2' Thinness 10mm">Silicone Rubber 2'×2' Thinness 10mm</option>
+                            </select>
+                            <select id="maintenanceList" style="display:none;">
+                                <option value="PU Male Connector 10mm">PU Male Connector 10mm</option>
+                                <option value="PU Male Connector 16mm">PU Male Connector 16mm</option>
+                                <option value="Spanner, Open & Ring type 19mm">Spanner, Open & Ring type 19mm</option>
+                                <option value="Measuring Tape">Measuring Tape</option>
+                                <option value="Fiberglass Measuring Tape">Fiberglass Measuring Tape</option>
+                                <option value="Hose Clamp 3/4 Inch">Hose Clamp 3/4 Inch</option>
+                                <option value="Double Open-End Spanner Wrench 25mm-26mm">Double Open-End Spanner Wrench 25mm-26mm</option>
+                                <option value="Stainless Steel Woodworking Chisel">Stainless Steel Woodworking Chisel</option>
+                            </select>
+                            <input type="number" id="entryQty" placeholder="Quantity">
+                            <div style="display:flex; gap:10px;">
+                                <button class="btn btn-success" style="flex:1" onclick="directIn()">DIRECT IN</button>
+                                <button class="btn btn-primary" style="flex:1" onclick="addToCart()"><i class="fas fa-plus"></i> ADD TO OUT LIST</button>
+                            </div>
+                        </div>
+                        <div style="border-left: 1px solid var(--glass-border); padding-left: 20px;">
+                            <h3>Out List (Cart)</h3>
+                            <div id="cartItems" style="min-height: 100px; max-height: 250px; overflow-y: auto; margin-bottom: 15px;"></div>
+                            <input type="text" id="bulkChallan" placeholder="Enter Common Challan No">
+                            <button class="btn btn-danger" style="width: 100%;" onclick="submitBulkOut()">CONFIRM ALL OUT</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="store-locked" class="card" style="text-align:center;">Login to unlock</div>
-        </div>
-
-        <div id="stock-view" class="tab-page">
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Current Inventory</h3>
-                    <button class="btn btn-success" onclick="downloadPDF()">Export PDF</button>
-                </div>
-                <table id="stockTable">
-                    <thead><tr><th>Item Name</th><th>Category</th><th>Stock</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+            <div id="entry-locked" class="card" style="text-align:center;">Login to unlock entry</div>
         </div>
 
         <div id="pending" class="tab-page">
             <div class="card">
                 <h3>Pending Approvals</h3>
-                <table id="pendingTable">
-                    <thead><tr><th>Time</th><th>User</th><th>Item</th><th>Qty</th><th>Type</th><th>Action</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+                <div style="overflow-x: auto;"><table id="pendingTable"><thead><tr><th>Time</th><th>User</th><th>Item</th><th>Qty</th><th>Type</th><th>Challan</th><th>Action</th></tr></thead><tbody></tbody></table></div>
             </div>
         </div>
 
-        <div id="finish-logs" class="tab-page">
-            <div class="card">
-                <h3>Finish Goods History Logs</h3>
-                <table id="finishLogTable">
-                    <thead><tr><th>Time</th><th>User</th><th>Item</th><th>Qty</th><th>Type</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+        <div id="inventory" class="tab-page">
+            <div class="card"><h3>Vessel Stock</h3><table id="vesselTable"><thead><tr><th>Item</th><th>Balance</th></tr></thead><tbody></tbody></table></div>
+            <div class="card"><h3>Pipe Stock</h3><table id="pipeTable"><thead><tr><th>Item</th><th>Balance</th></tr></thead><tbody></tbody></table></div>
+            <div class="card"><h3>Tank Stock</h3><table id="tankTable"><thead><tr><th>Item</th><th>Balance</th></tr></thead><tbody></tbody></table></div>
+            <div class="card"><h3>Maintenance Stock</h3><table id="maintenanceTable"><thead><tr><th>Item</th><th>Balance</th></tr></thead><tbody></tbody></table></div>
         </div>
 
-        <div id="store-logs" class="tab-page">
+        <div id="logs" class="tab-page">
             <div class="card">
-                <h3>Store Goods History Logs</h3>
-                <table id="storeLogTable">
-                    <thead><tr><th>Time</th><th>User</th><th>Item</th><th>Qty</th><th>Type</th><th>Ref/Challan</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+                <h3>Stock Logs (History)</h3>
+                
+                <div class="log-filter-btns">
+                    <button class="btn btn-outline active" onclick="filterLogsByCategory('ALL', this)">ALL</button>
+                    <button class="btn btn-outline" onclick="filterLogsByCategory('VESSEL', this)">VESSEL</button>
+                    <button class="btn btn-outline" onclick="filterLogsByCategory('PIPE', this)">PIPE</button>
+                    <button class="btn btn-outline" onclick="filterLogsByCategory('TANK', this)">TANK</button>
+                    <button class="btn btn-outline" onclick="filterLogsByCategory('MAINTENANCE', this)">MAINTENANCE</button>
+                    
+                    <div class="date-filter-group" style="margin-left: auto;">
+                        <input type="date" id="logFrom" class="date-input">
+                        <input type="date" id="logTo" class="date-input">
+                        <button class="btn-mini btn-primary" onclick="applyCombinedFilters()">Apply Date</button>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table id="globalLogTable">
+                        <thead><tr><th>Time</th><th>Category</th><th>Item</th><th>Qty</th><th>Type</th><th>Challan</th><th>User</th><th>Action</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="download-group">
+                    <button class="btn btn-success" onclick="downloadExcel()"><i class="fas fa-file-excel"></i> Download Excel</button>
+                    <button class="btn btn-danger" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                </div>
             </div>
         </div>
 
         <div id="settings" class="tab-page">
-            <div class="card" style="max-width: 400px; margin: 0 auto;">
-                <h3>Account Settings</h3>
-                <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 20px;">Change your login PIN</p>
-                <input type="password" id="oldPin" placeholder="Current PIN">
+            <div id="settings-locked" class="card" style="text-align:center;"><h3><i class="fas fa-lock"></i> Please Login</h3></div>
+            <div id="settings-container" style="display:none;" class="card">
+                <h3>Change Account PIN</h3>
+                <p>User: <span id="setting-user-name" style="color: var(--primary); font-weight: 700;"></span></p>
+                <input type="password" id="currPin" placeholder="Current PIN">
                 <input type="password" id="newPin" placeholder="New PIN">
-                <input type="password" id="confirmNewPin" placeholder="Confirm New PIN">
-                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="changePassword()">Update PIN</button>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="changeUserPin()">Update PIN Online</button>
             </div>
         </div>
     </div>
@@ -211,176 +282,24 @@
 
 <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyCumK54qepKZwnlsuZzRKlj9GUFa0HNadU",
-        authDomain: "production-report-dd7b6.firebaseapp.com",
-        databaseURL: "https://production-report-dd7b6-default-rtdb.firebaseio.com",
-        projectId: "production-report-dd7b6",
-        storageBucket: "production-report-dd7b6.firebasestorage.app",
-        messagingSenderId: "382347372681",
-        appId: "1:382347372681:web:0703b9ddfec327cc683e58",
-        measurementId: "G-7W855BE0BB"
+        apiKey: "AIzaSyCv_lbDM4K5C79TB-P4EOIWVUgi9qHfNaE",
+        authDomain: "waterbirdserp.firebaseapp.com",
+        databaseURL: "https://waterbirdserp-default-rtdb.firebaseio.com",
+        projectId: "waterbirdserp",
+        storageBucket: "waterbirdserp.firebasestorage.app",
+        messagingSenderId: "799606239136",
+        appId: "1:799606239136:web:a07cb470d45f240817fec5"
     };
 
-    let db;
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    let USERS_LIST = { "Sazzad Hossain": "866199", "Rokibul Islam": "1122", "Md.alamin": "1122", "Md.shipon":"5688" };
     let loggedInUser = null;
-    let finishInventory = {}, storeInventory = {}, logsData = [], pendingRequests = [], storeCart = [], userCredentials = {};
-    let currentFinishCat = 'TANK', currentStoreCat = 'TANK';
+    let outCart = [];
+    let currentCategoryFilter = 'ALL';
 
-    const DEFAULT_USERS = { "Rohul Amin":"1122","Sazzad Hossain": "199866", "Rokibul Islam": "1122", "Md.alamin": "1122", "Md.shipon":"5688" };
-
-    const ITEM_LISTS = {
-        finish: {
-            TANK: ["65 ltr white roto tank", "100 ltr white roto tank", "150 ltr white roto tank", "300 ltr white roto", "300 ltr green roto tank", "300 ltr black roto", "500 ltr chemical roto", "500 ltr green roto tank", "500 ltr green roto classic", "500 ltr black roto tank", "500 ltr black roto tank classic", "500 ltr 3 layer mosaic tank", "500 ltr 3 layer mosaic brass fitting", "500 ltr 3 layer green roto tank", "500 ltr blow blue tank", "750 ltr green roto tank", "750 ltr green roto tank classic", "750 ltr black roto tank", "750 ltr black roto tank classic", "750 ltr 3 layer mosaic tank", "750 ltr 3 layer mosaic brass fitting", "750 3 layer green mosaic water tank", "1000 ltr chemical roto tank", "1000 ltr green roto tank", "1000 ltr green roto tank classic", "1000 ltr black roto tank", "1000 ltr black roto tank classic", "1000 ltr 3 layer green roto tank", "1000 ltr 3 layer mosaic water tank", "1000 ltr 3 layer mosaic brass fitting", "1000 ltr blow blue tank", "1500 chemical roto tank", "1500 ltr green roto tank", "1500 ltr black roto tank", "1500 ltr 3 layer mosaic water tank", "2000 ltr chemical tank", "2000 ltr black roto tank", "2000 ltr 3 layer green roto tank", "2000 ltr 3 layer musaic tank", "2000 ltr green roto tank", "3000 ltr green roto tank", "3000 ltr black roto tank", "3000 ltr blow blue tank", "5000 ltr black roto tank", "10000 ltr black roto tank"],
-            HDPE: ["315 mm HDPE Pipe PN-10", "110 mm HDPE Pipe PN-10", "75 mm HDPE Pipe PN-10", "50 mm HDPE Pipe PN-10", "HDPE 20mm"],
-            VESSEL: ["10×35 pressure vessel", "12×52 pressure vessel"]
-        },
-        store: {
-            TANK: ["3/4 Inch Brass Fitting", "1 Inch Brass Fitting", "1.5 Inch Brass Fitting", "3/4 Inch PVC Bond Plug", "1 Inch PVC Bond Plug", "Cyclohexanone", "Hexa Blade", "Sticky Super Glue", "Torch Light", "Nidaperm White", "Nidaperm Raducher", "Nidaperm Black", "Hand Burner", "Air Plug", "Wire Brush, Wooden", "Silicon Mold Release Compound", "1 Inch PVC Tank Adapter", "3/4 Inch PVC Tank Adapter", "1.5 Inch PVC Tank Adapter", "2 Inch PVC Tank Adapter", "Anticutter Body", "Soldering Iron", "Soldering iron coil", "Screen Print Cloth", "PVC Tape", "SS Drill Bit - 4.5mm", "Hand saw cutter machine", "Utility Knife Blade", "Blade For HDPE Pipe Cutter Machines", "Pneumatic nipple (10X13 mm)", "Rivit 575 with Washer", "HDPE Nala Sheet Thickness-3mm", "Sonacote for Screen Print", "Silicone Rubber 2'×2' Thinness 10mm"],
-            HDPE: ["DOP", "Screen Printing Ink Black", "Screen Printing Ink White", "Wash Solvent", "Plastic Rope For Packaging"],
-            VESSEL: ["Washing Agent Ethanol", "Surgical Hand Gloves", "Carton Tape 2.5 Inch", "4 Inch Cutting Disc", "9 Inch Foam Roller", "9 Inch Handle For Roller", "4 Inch Flap Disc", "Foam Disk 4 inch", "Cotton Hand Gloves", "Jute", "Anticutter Blade", "Face Mask", "2 Inch Brush", "Wrapping Poly 20 Inch Roll", "Grinding Machine - 4 Inch", "Plastic Shoe", "Safety Apron", "Mixer Machine", "Cup Brushe", "Polytheen", "Silicon Gum (YUANDA)", "Dopper"],
-            MAINTENANCE: ["PU Male Connector 10mm", "PU Male Connector 16mm", "Spanner, Open & Ring type 19mm", "Measuring Tape", "Fiberglass Measuring Tape", "Hose Clamp 3/4 Inch", "Double Open-End Spanner Wrench 25mm-26mm", "Stainless Steel Woodworking Chisel"]
-        }
-    };
-
-    function initFirebase() {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-        db.ref('erp_pro_data').on('value', (snap) => {
-            const data = snap.val() || {};
-            finishInventory = data.finishInventory || {};
-            storeInventory = data.storeInventory || {};
-            logsData = data.logsData || [];
-            pendingRequests = data.pendingRequests || [];
-            // পিনগুলো যাতে রিলোড করলে না হারায়, সে জন্য সরাসরি ডাটাবেস থেকে লোড করা হচ্ছে
-            userCredentials = data.userCredentials || DEFAULT_USERS; 
-            document.getElementById('connection-status').innerHTML = '<i class="fas fa-check-circle"></i> ONLINE';
-            renderAll();
-        });
-        updateDropdowns();
-    }
-
-    function login() {
-        const user = document.getElementById('userSelect').value;
-        const pin = document.getElementById('userPin').value;
-        if(userCredentials[user] === pin) {
-            loggedInUser = user;
-            document.getElementById('display-name').innerText = user;
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('entry-container').style.display = 'block';
-            document.getElementById('store-container').style.display = 'block';
-            document.getElementById('entry-locked').style.display = 'none';
-            document.getElementById('store-locked').style.display = 'none';
-            document.getElementById('logout-btn').style.display = 'block';
-            document.getElementById('nav-settings').style.display = 'flex';
-            if(user === "Sazzad Hossain") document.getElementById('nav-pending').style.display = 'flex';
-        } else alert("Invalid PIN!");
-    }
-
-    function changePassword() {
-        const oldPin = document.getElementById('oldPin').value;
-        const newPin = document.getElementById('newPin').value;
-        const confirmPin = document.getElementById('confirmNewPin').value;
-
-        if(userCredentials[loggedInUser] !== oldPin) return alert("Current PIN is incorrect!");
-        if(newPin.length < 4) return alert("New PIN must be at least 4 digits!");
-        if(newPin !== confirmPin) return alert("New PINs do not match!");
-
-        userCredentials[loggedInUser] = newPin;
-        saveToCloud(); // ডাটাবেসে সেভ করা হচ্ছে যাতে রিফ্রেশ করলে নষ্ট না হয়
-        alert("PIN updated and saved to cloud!");
-        document.getElementById('oldPin').value = '';
-        document.getElementById('newPin').value = '';
-        document.getElementById('confirmNewPin').value = '';
-    }
-
-    function processAction(type, mode) {
-        const name = mode === 'FINISH' ? document.getElementById('finishItemList').value : document.getElementById('storeItemList').value;
-        const qty = parseInt(mode === 'FINISH' ? document.getElementById('finishQty').value : document.getElementById('storeQty').value);
-        const cat = mode === 'FINISH' ? currentFinishCat : currentStoreCat;
-        if(!name || isNaN(qty) || qty <= 0) return alert("Select item and quantity!");
-        const data = { name, qty, type, category: cat, mode, user: loggedInUser, time: new Date().toLocaleString() };
-        if(loggedInUser === "Sazzad Hossain") commitData(data); else { pendingRequests.push(data); saveToCloud(); alert("Pending approval!"); }
-    }
-
-    function addToCart() {
-        const name = document.getElementById('storeItemList').value;
-        const qty = parseInt(document.getElementById('storeQty').value);
-        if(!name || isNaN(qty)) return alert("Select item/qty");
-        storeCart.push({ name, qty, category: currentStoreCat, mode: 'STORE', type: 'OUT' });
-        renderCart();
-    }
-
-    function renderCart() {
-        const container = document.getElementById('cartItems');
-        container.innerHTML = storeCart.map((item, idx) => `
-            <div class="cart-item-row">
-                <span>${item.name} (${item.qty})</span>
-                <button class="btn btn-danger" style="padding:5px" onclick="storeCart.splice(${idx},1); renderCart();">X</button>
-            </div>`).join('');
-    }
-
-    function submitBulkOut() {
-        const challan = document.getElementById('challanNo').value;
-        if(storeCart.length === 0 || !challan) return alert("Cart empty or Ref missing!");
-        storeCart.forEach(item => {
-            const data = { ...item, challan, user: loggedInUser, time: new Date().toLocaleString() };
-            if(loggedInUser === "Sazzad Hossain") commitData(data); else pendingRequests.push(data);
-        });
-        storeCart = []; document.getElementById('challanNo').value = ''; renderCart(); saveToCloud();
-    }
-
-    function commitData(data, idx = null) {
-        const mult = data.type === 'IN' ? 1 : -1;
-        const inv = data.mode === 'FINISH' ? finishInventory : storeInventory;
-        if(!inv[data.category]) inv[data.category] = {};
-        inv[data.category][data.name] = (inv[data.category][data.name] || 0) + (data.qty * mult);
-        logsData.push(data);
-        if(idx !== null) pendingRequests.splice(idx, 1);
-        saveToCloud();
-    }
-
-    function saveToCloud() {
-        db.ref('erp_pro_data').set({ finishInventory, storeInventory, logsData, pendingRequests, userCredentials });
-    }
-
-    function renderAll() {
-        const sBody = document.querySelector('#stockTable tbody');
-        sBody.innerHTML = '';
-        [finishInventory, storeInventory].forEach(inv => {
-            Object.keys(inv).forEach(cat => {
-                Object.entries(inv[cat]).forEach(([name, qty]) => {
-                    if(qty !== 0) sBody.innerHTML += `<tr><td>${name}</td><td>${cat}</td><td>${qty}</td></tr>`;
-                });
-            });
-        });
-
-        const pBody = document.querySelector('#pendingTable tbody');
-        pBody.innerHTML = '';
-        document.getElementById('pending-count-badge').innerText = pendingRequests.length;
-        pendingRequests.forEach((p, idx) => {
-            pBody.innerHTML += `<tr><td>${p.time}</td><td>${p.user}</td><td>${p.name}</td><td>${p.qty}</td><td>${p.type}</td><td><button class="btn btn-success" onclick='commitData(${JSON.stringify(p)}, ${idx})'>OK</button></td></tr>`;
-        });
-
-        const fLogBody = document.querySelector('#finishLogTable tbody');
-        const sLogBody = document.querySelector('#storeLogTable tbody');
-        fLogBody.innerHTML = '';
-        sLogBody.innerHTML = '';
-        
-        [...logsData].reverse().forEach(l => {
-            const row = `<tr><td>${l.time}</td><td>${l.user}</td><td>${l.name}</td><td>${l.qty}</td><td>${l.type}</td>${l.mode === 'STORE' ? `<td>${l.challan || '-'}</td>` : ''}</tr>`;
-            if(l.mode === 'FINISH') {
-                fLogBody.innerHTML += row;
-            } else if(l.mode === 'STORE') {
-                sLogBody.innerHTML += row;
-            }
-        });
-    }
-
-    function updateDropdowns() {
-        document.getElementById('finishItemList').innerHTML = ITEM_LISTS.finish[currentFinishCat].map(i => `<option value="${i}">${i}</option>`).join('');
-        document.getElementById('storeItemList').innerHTML = ITEM_LISTS.store[currentStoreCat].map(i => `<option value="${i}">${i}</option>`).join('');
-    }
-
+    // Same core functions as before (login, toggle, entry, etc.)
     function showTab(id) {
         document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -389,22 +308,230 @@
         if(nav) nav.classList.add('active');
     }
 
-    function switchTabStyle(cat, type, btn) {
-        if(type === 'finish') currentFinishCat = cat; else currentStoreCat = cat;
-        btn.parentElement.querySelectorAll('.p-tab').forEach(b => b.classList.remove('active'));
+    function toggleEntrySelect() {
+        const cat = document.getElementById('entryCategory').value;
+        document.getElementById('vesselList').style.display = cat === 'VESSEL' ? 'block' : 'none';
+        document.getElementById('pipeList').style.display = cat === 'PIPE' ? 'block' : 'none';
+        document.getElementById('tankList').style.display = cat === 'TANK' ? 'block' : 'none';
+        document.getElementById('maintenanceList').style.display = cat === 'MAINTENANCE' ? 'block' : 'none';
+    }
+
+    function addToCart() {
+        const cat = document.getElementById('entryCategory').value;
+        const listId = cat.toLowerCase() + 'List';
+        const name = document.getElementById(listId).value;
+        const qty = parseInt(document.getElementById('entryQty').value);
+        if(!name || isNaN(qty) || qty <= 0) return alert("Please enter valid quantity!");
+        outCart.push({ name, qty, category: cat });
+        renderCart();
+        document.getElementById('entryQty').value = '';
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cartItems');
+        if(outCart.length === 0) {
+            container.innerHTML = `<p style="color: var(--text-dim); text-align: center;">Empty</p>`;
+            return;
+        }
+        container.innerHTML = outCart.map((item, index) => `
+            <div class="cart-item-row">
+                <div style="font-size:12px;"><strong>${item.name}</strong><br><span style="color:var(--danger)">Qty: ${item.qty}</span></div>
+                <button class="btn-mini btn-danger" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
+            </div>
+        `).join('');
+    }
+
+    function removeFromCart(index) { outCart.splice(index, 1); renderCart(); }
+
+    function directIn() {
+        const cat = document.getElementById('entryCategory').value;
+        const name = document.getElementById(cat.toLowerCase() + 'List').value;
+        const qty = parseInt(document.getElementById('entryQty').value);
+        if(!name || isNaN(qty) || qty <= 0) return alert("Valid data please!");
+        processRequest({ name, qty, type: 'IN', category: cat, user: loggedInUser, time: new Date().toLocaleString(), challan: "Inward" });
+        document.getElementById('entryQty').value = '';
+    }
+
+    function submitBulkOut() {
+        const challan = document.getElementById('bulkChallan').value;
+        if(outCart.length === 0 || !challan) return alert("List empty or Challan missing!");
+        outCart.forEach(item => processRequest({ ...item, type: 'OUT', user: loggedInUser, time: new Date().toLocaleString(), challan: challan }));
+        outCart = []; renderCart(); document.getElementById('bulkChallan').value = '';
+        alert("✅ Sent for processing!");
+    }
+
+    function processRequest(data) {
+        if(loggedInUser === "Sazzad Hossain") executeFinalUpdate(data, null);
+        else database.ref('pending_requests').push(data);
+    }
+
+    function executeFinalUpdate(data, pendingKey) {
+        const path = data.category.toLowerCase() + '/' + data.name.replace(/\s+/g, '_').replace(/\./g, '-');
+        database.ref('inventory/' + path).transaction(curr => (data.type === 'IN' ? (curr || 0) + data.qty : (curr || 0) - data.qty), (err, commit) => {
+            if(commit) {
+                database.ref('logs').push(data);
+                if(pendingKey) database.ref('pending_requests/' + pendingKey).remove();
+            }
+        });
+    }
+
+    function loginProfile() {
+        const name = document.getElementById('userSelect').value;
+        const pin = document.getElementById('userPin').value;
+        if (USERS_LIST[name] === pin) {
+            loggedInUser = name;
+            document.getElementById('display-name').innerText = name;
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('entry-container').style.display = 'grid';
+            document.getElementById('entry-locked').style.display = 'none';
+            document.getElementById('logout-btn').style.display = 'block';
+            document.getElementById('settings-locked').style.display = 'none';
+            document.getElementById('settings-container').style.display = 'block';
+            document.getElementById('setting-user-name').innerText = name;
+            if(name === "Sazzad Hossain") {
+                document.getElementById('admin-controls').style.display = 'block';
+                document.getElementById('nav-pending').style.display = 'flex';
+            }
+            showTab('dashboard');
+        } else alert("Wrong PIN!");
+    }
+
+    // Realtime Database Listeners
+    database.ref('inventory').on('value', snap => {
+        const data = snap.val() || {};
+        ['vessel', 'pipe', 'tank', 'maintenance'].forEach(cat => {
+            const body = document.querySelector(`#${cat}Table tbody`);
+            body.innerHTML = '';
+            if(data[cat]) Object.keys(data[cat]).forEach(k => body.innerHTML += `<tr><td>${k.replace(/_/g,' ')}</td><td>${data[cat][k]}</td></tr>`);
+        });
+        document.getElementById('stat-total-items').innerText = document.querySelectorAll('#inventory table tbody tr').length;
+    });
+
+    database.ref('logs').on('value', snap => {
+        const logs = snap.val() || {};
+        const gLog = document.querySelector('#globalLogTable tbody');
+        gLog.innerHTML = '';
+        let tIn = 0, tOut = 0;
+        Object.keys(logs).reverse().forEach(key => {
+            const l = logs[key];
+            const timestamp = new Date(l.time).getTime();
+            gLog.innerHTML += `
+                <tr data-category="${l.category}" data-time="${timestamp}">
+                    <td>${l.time}</td><td>${l.category}</td><td>${l.name}</td><td>${l.qty}</td>
+                    <td style="color:${l.type==='IN'?'#34d399':'#fb7185'}">${l.type}</td>
+                    <td><span class="challan-badge">${l.challan}</span></td><td>${l.user}</td>
+                    <td><button class="btn-mini btn-danger" onclick='deleteLog("${key}", ${JSON.stringify(l)})'>X</button></td>
+                </tr>`;
+            if(l.type === 'IN') tIn += l.qty; else tOut += l.qty;
+        });
+        document.getElementById('stat-total-in').innerText = tIn;
+        document.getElementById('stat-total-out').innerText = tOut;
+        applyCombinedFilters();
+    });
+
+    function deleteLog(logKey, logData) {
+        if(!confirm("Revert stock and delete?")) return;
+        const path = logData.category.toLowerCase() + '/' + logData.name.replace(/\s+/g, '_').replace(/\./g, '-');
+        database.ref('inventory/' + path).transaction(curr => (logData.type === 'IN' ? (curr || 0) - logData.qty : (curr || 0) + logData.qty), (err, commit) => {
+            if(commit) database.ref('logs/' + logKey).remove();
+        });
+    }
+
+    function filterLogsByCategory(category, btn) {
+        currentCategoryFilter = category;
+        document.querySelectorAll('.log-filter-btns .btn-outline').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        updateDropdowns();
+        applyCombinedFilters();
+    }
+
+    function applyCombinedFilters() {
+        const fromInput = document.getElementById('logFrom').value;
+        const toInput = document.getElementById('logTo').value;
+        const fromDate = fromInput ? new Date(fromInput).setHours(0,0,0,0) : null;
+        const toDate = toInput ? new Date(toInput).setHours(23,59,59,999) : null;
+        const rows = document.querySelectorAll('#globalLogTable tbody tr');
+        rows.forEach(row => {
+            const cat = row.getAttribute('data-category');
+            const rowTime = parseInt(row.getAttribute('data-time'));
+            let show = (currentCategoryFilter === 'ALL' || cat === currentCategoryFilter);
+            if (fromDate && rowTime < fromDate) show = false;
+            if (toDate && rowTime > toDate) show = false;
+            row.style.display = show ? "" : "none";
+        });
+    }
+
+    database.ref('pending_requests').on('value', snap => {
+        const list = snap.val() || {};
+        const tbody = document.querySelector('#pendingTable tbody');
+        tbody.innerHTML = '';
+        Object.keys(list).forEach(k => {
+            const l = list[k];
+            tbody.innerHTML += `<tr><td>${l.time}</td><td>${l.user}</td><td>${l.name}</td><td>${l.qty}</td><td>${l.type}</td><td>${l.challan}</td><td><button class="btn-mini btn-success" onclick='executeFinalUpdate(${JSON.stringify(l)}, "${k}")'>OK</button></td></tr>`;
+        });
+        document.getElementById('pending-count-badge').innerText = Object.keys(list).length;
+    });
+
+    // --- DOWNLOAD SYSTEMS ---
+    
+    function downloadExcel() {
+        const table = document.getElementById("globalLogTable");
+        const rows = Array.from(table.querySelectorAll("tbody tr")).filter(tr => tr.style.display !== 'none');
+        
+        const data = rows.map(tr => {
+            const cells = tr.querySelectorAll("td");
+            return {
+                "Time": cells[0].innerText,
+                "Category": cells[1].innerText,
+                "Item": cells[2].innerText,
+                "Qty": cells[3].innerText,
+                "Type": cells[4].innerText,
+                "Challan": cells[5].innerText,
+                "User": cells[6].innerText
+            };
+        });
+
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "StockLogs");
+        XLSX.writeFile(workbook, `WBL_Stock_Report_${new Date().toLocaleDateString()}.xlsx`);
     }
 
     function downloadPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text("Water Birds Limited - Stock Report", 14, 15);
-        doc.autoTable({ html: '#stockTable', startY: 20 });
-        doc.save("Stock_Report.pdf");
+        
+        doc.setFontSize(18);
+        doc.text("WATER BIRDS LIMITED - STOCK REPORT", 14, 20);
+        doc.setFontSize(10);
+        doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 28);
+        doc.text(`Category: ${currentCategoryFilter}`, 14, 34);
+
+        const rows = Array.from(document.querySelectorAll("#globalLogTable tbody tr"))
+            .filter(tr => tr.style.display !== 'none')
+            .map(tr => {
+                const cells = tr.querySelectorAll("td");
+                return [cells[0].innerText, cells[1].innerText, cells[2].innerText, cells[3].innerText, cells[4].innerText, cells[5].innerText, cells[6].innerText];
+            });
+
+        doc.autoTable({
+            head: [['Time', 'Category', 'Item', 'Qty', 'Type', 'Challan', 'User']],
+            body: rows,
+            startY: 40,
+            theme: 'grid',
+            headStyles: { fillColor: [129, 140, 248] }
+        });
+
+        doc.save(`WBL_Report_${Date.now()}.pdf`);
     }
 
-    function logout() { location.reload(); }
+    function logoutProfile() { location.reload(); }
+    function resetAllData() { if(confirm("Clear database?")) { database.ref('/').remove(); location.reload(); } }
+    function changeUserPin() {
+        const curr = document.getElementById('currPin').value;
+        const newP = document.getElementById('newPin').value;
+        if(USERS_LIST[loggedInUser] !== curr) return alert("Wrong PIN!");
+        database.ref('users/' + loggedInUser.replace(/\s+/g, '_')).set(newP).then(() => { alert("Updated!"); location.reload(); });
+    }
 </script>
 </body>
 </html>
